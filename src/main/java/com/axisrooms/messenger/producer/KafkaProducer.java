@@ -23,14 +23,14 @@ public class KafkaProducer {
 
             @Override
             public void onSuccess(SendResult<String, String> result) {
-                log.info("sent message='{}' with offset={}", message,
+                log.info("Sent message='{}' with offset={}", message,
                         result.getRecordMetadata().offset());
                 taskResult.setResult("The message, " + message + " has been pushed with offset value, " + result.getRecordMetadata().offset());
             }
 
             @Override
             public void onFailure(Throwable ex) {
-                log.error("unable to send message='{}'", message, ex);
+                log.error("Unable to send message='{}'", message, ex);
                 taskResult.setResult("The message, " + message + " has not been pushed");
             }
         });
