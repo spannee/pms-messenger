@@ -38,7 +38,7 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
 
-        props.put("group.id", "sampleTest");
+        props.put("group.id", "pmsTopics");
         props.put("enable.auto.commit", "true");
 
         return props;

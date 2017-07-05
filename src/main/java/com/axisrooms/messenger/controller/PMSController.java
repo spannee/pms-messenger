@@ -17,16 +17,32 @@ public class PMSController {
     @Autowired
     KafkaProducer kafkaPublisherImpl;
 
-    @RequestMapping(path="/dayWisePrice", method= RequestMethod.POST)
+    @RequestMapping(path="/api/dayWisePrice", method= RequestMethod.POST)
     @Async("threadPoolTaskExecutor")
     public DeferredResult<String> asyncPricePublisher(@RequestBody String priceRequest) {
         DeferredResult<String> response = new DeferredResult<>();
 
         try {
             log.info("Started processing the following request {}", priceRequest);
-            kafkaPublisherImpl.publish("testFive", priceRequest, response);
+            kafkaPublisherImpl.publish("dayWisePrice", priceRequest, response);
         } catch (Throwable e) {
             log.error("Unable to process the following request {}. Exception [" + e + "]", priceRequest);
+            response.setErrorResult("Unable to process the following request due to [" + e.getMessage() + "]");
+        }
+
+        return response;
+    }
+
+    @RequestMapping(path="/api/failedRequests", method= RequestMethod.POST)
+    @Async("threadPoolTaskExecutor")
+    public DeferredResult<String> asyncFailedRequestsPublisher(@RequestBody String failedRequest) {
+        DeferredResult<String> response = new DeferredResult<>();
+
+        try {
+            log.info("Started processing the following request {}", failedRequest);
+            kafkaPublisherImpl.publish("failedRequests", failedRequest, response);
+        } catch (Throwable e) {
+            log.error("Unable to process the following request {}. Exception [" + e + "]", failedRequest);
             response.setErrorResult("Unable to process the following request due to [" + e.getMessage() + "]");
         }
 
