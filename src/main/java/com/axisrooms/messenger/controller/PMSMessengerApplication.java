@@ -12,7 +12,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class PMSMessengerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PMSMessengerApplication.class, args);
+        SpringApplication.run(PMSMessengerApplication.class, args).close();
     }
 
     @Bean(name = "threadPoolTaskExecutor")
