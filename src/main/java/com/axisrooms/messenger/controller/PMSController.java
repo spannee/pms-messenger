@@ -33,7 +33,7 @@ public class PMSController {
         return response;
     }
 
-    @RequestMapping(path="/api/failedRequests", method= RequestMethod.POST)
+    @RequestMapping(path="/failedRequests", method= RequestMethod.POST)
     @Async("threadPoolTaskExecutor")
     public DeferredResult<String> asyncFailedRequestsPublisher(@RequestBody String failedRequest) {
         DeferredResult<String> response = new DeferredResult<>();
