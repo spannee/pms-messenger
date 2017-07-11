@@ -17,7 +17,7 @@ public class PMSController {
     @Autowired
     KafkaProducer kafkaPublisherImpl;
 
-    @RequestMapping(path="/api/dayWisePrice", method= RequestMethod.POST)
+    @RequestMapping(path="/dayWisePrice", method= RequestMethod.POST)
     @Async("threadPoolTaskExecutor")
     public DeferredResult<String> asyncPricePublisher(@RequestBody String priceRequest) {
         DeferredResult<String> response = new DeferredResult<>();
