@@ -2,3 +2,5 @@ kafka:
   bootstrap-servers: localhost:9092
   acks             : all
   retries          : 0
+  pms.group.id     : pmsTopics
+  auto.commit      : true

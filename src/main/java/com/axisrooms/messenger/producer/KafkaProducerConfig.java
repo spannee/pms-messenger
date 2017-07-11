@@ -26,6 +26,12 @@ public class KafkaProducerConfig {
     @Value("${kafka.retries}")
     private Integer RETRIES;
 
+    @Value("${kafka.pms.group.id}")
+    private String PMS_GROUP_ID;
+
+    @Value("${kafka.auto.commit}")
+    private String AUTO_COMMIT;
+
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
@@ -38,8 +44,8 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
 
-        props.put("group.id", "pmsTopics");
-        props.put("enable.auto.commit", "true");
+        props.put("group.id", PMS_GROUP_ID);
+        props.put("enable.auto.commit", AUTO_COMMIT);
 
         return props;
     }
