@@ -17,14 +17,14 @@ public class PMSController {
     @Autowired
     KafkaProducer kafkaPublisherImpl;
 
-    @RequestMapping(path="/api/dayWisePrice", method= RequestMethod.POST)
+    @RequestMapping(path="/api/bulkPriceUpdate", method= RequestMethod.POST)
     @Async("threadPoolTaskExecutor")
     public DeferredResult<String> asyncPricePublisher(@RequestBody String priceRequest) {
         DeferredResult<String> response = new DeferredResult<>();
 
         try {
             log.info("Started processing the following request {}", priceRequest);
-            kafkaPublisherImpl.publish("dayWisePrice", priceRequest, response);
+            kafkaPublisherImpl.publish("bulkPriceUpdate", priceRequest, response);
         } catch (Throwable e) {
             log.error("Unable to process the following request {}. Exception [" + e + "]", priceRequest);
             response.setErrorResult("Unable to process the following request due to [" + e.getMessage() + "]");
