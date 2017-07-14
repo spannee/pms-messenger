@@ -1,13 +1,15 @@
 package com.axisrooms.messenger.producer;
 
+import com.axisrooms.messenger.util.CompletableFutureUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
-import org.springframework.web.context.request.async.DeferredResult;
+
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -16,23 +18,12 @@ public class KafkaProducer {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public void publish(String topic, String message, DeferredResult<String> taskResult) {
-        ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, message);
+    @Async("threadPoolTaskExecutor")
+    public CompletableFuture<SendResult<String, String>> publish(String topic, String message) {
+        ListenableFuture<SendResult<String, String>> listenableFuture = kafkaTemplate.send(topic, message);
 
-        future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+        CompletableFuture<SendResult<String, String>> completableFuture = CompletableFutureUtil.buildCompletableFuture(listenableFuture);
 
-            @Override
-            public void onSuccess(SendResult<String, String> result) {
-                log.info("Sent message='{}' with offset={}", message,
-                        result.getRecordMetadata().offset());
-                taskResult.setResult("The message, " + message + " has been pushed with offset value, " + result.getRecordMetadata().offset());
-            }
-
-            @Override
-            public void onFailure(Throwable ex) {
-                log.error("Unable to send message='{}'", message, ex);
-                taskResult.setResult("The message, " + message + " has not been pushed");
-            }
-        });
+        return completableFuture;
     }
 }
